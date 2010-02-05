@@ -3,10 +3,12 @@
 
 var _Predicate = {
 	active: true,
+	mute: false,
 	extensions: {},
+	currentFunction: null,
 
 	warn: function () {
-		if (console && console.warn) {
+		if (!_Predicate.mute && console && console.warn) {
 			// ['jsPredicate'].concat(arguments) === ['jsPredicate', ['arg1', 'arg2']]
 			// instead of ['jsPredicate', 'arg1', 'arg2'])
 			// Do the concat manually ...
@@ -22,33 +24,17 @@ var _Predicate = {
 		if (!func.apply(this, arguments)) {
 			var error = {
 				application: 'jsPredicate',
-				type: error,
-				func: func,
-				arguments: arguments
+				condition: func,
+				arguments: arguments,
+				func: _Predicate.currentFunction
 			};
 
-			// Display a more useful message than [object Object] ...
-			if (error.toString() === '[object Object]') {
-				error.toString = function () {
-					var str = this.application + ' ' + this.type + ': ';
-					str += '[';
-					// arguments does not have the join function, so we recode it
-					for (var i = 0; i < this.arguments.length; ++i) {
-						str += this.arguments[i];
-						if (i !== this.arguments.length - 1) {
-							str += ', ';
-						}
-					}
-					str += ']';
-					str += ' does not match ' + this.func.name ? this.func.name : this.func.toString();
-					return str;
+			if (!_Predicate.mute && console) {
+				if (console.trace) {
+					console.trace();
 				}
-			}
-
-			if (console) {
-				if (console.info && console.exception) {
-					console.info(error);
-					console.exception(error);
+				if (console.log) {
+					console.log(error);
 				}
 			}
 			throw error;
@@ -200,6 +186,7 @@ var Predicate = function () {
 			}
 
 			return function () {
+				_Predicate.currentFunction = func;
 				var i;
 
 				// Verify the pre conditions
@@ -226,6 +213,13 @@ Predicate.active = function (active) {
 		return _Predicate.active;
 	}
 	_Predicate.active = !!active;
+};
+
+Predicate.mute = function (mute) {
+	if (arguments.length === 0) {
+		return _Predicate.mute;
+	}
+	_Predicate.mute = !!mute;
 };
 
 Predicate.extend = function () {

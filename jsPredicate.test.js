@@ -2,21 +2,20 @@
 (function () {
 
 function assert(result, func) {
-	var trace = console.info;
-	console.trace = null;
+	Predicate.mute(true);
 	try {
 		func();
 	} catch (e) {
 		if (result) {
 			console.warn('Fail: (' + e + ') on ' + func.toString());
 		}
-		console.trace = trace;
+		Predicate.mute(false);
 		return;
 	}
 	if (!result) {
 		console.warn('Fail: ' + func.toString());
 	}
-	console.trace = trace;
+	Predicate.mute(false);
 }
 
 Predicate.active(true);

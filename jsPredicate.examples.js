@@ -6,4 +6,4 @@ var div = new Predicate().pre('number', [null, 'notnull']).post('number')
 		return a / b;
 	});
 
-div(null, 0);
+div([], 0);
