@@ -21,10 +21,10 @@ var _Predicate = {
 	check: function (func, arguments) {
 		if (!func.apply(this, arguments)) {
 			var error = {
-				'application': 'jsPredicate',
-				'type': 'error',
-				'function': func,
-				'arguments': arguments
+				application: 'jsPredicate',
+				type: error,
+				func: func,
+				arguments: arguments
 			};
 
 			// Display a more useful message than [object Object] ...
@@ -40,7 +40,7 @@ var _Predicate = {
 						}
 					}
 					str += ']';
-					str += ' does not match ' + this['function'].name ? this['function'].name : this['function'].toString();
+					str += ' does not match ' + this.func.name ? this.func.name : this.func.toString();
 					return str;
 				}
 			}
