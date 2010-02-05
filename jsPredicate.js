@@ -263,5 +263,3 @@ Predicate.extend({
 window.Predicate = Predicate;
 
 }());
-
-
