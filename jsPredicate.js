@@ -1,6 +1,17 @@
 
 (function () {
 
+var PredicateError = function (condition, args, func) {
+	this.application = 'jsPredicate';
+	this.condition = condition;
+	this.arguments = args;
+	this.func = func;
+}
+
+PredicateError.toString = function () {
+	return 'jsPredicate Error';
+}
+
 var _Predicate = {
 	active: true,
 	mute: false,
@@ -8,7 +19,7 @@ var _Predicate = {
 	currentFunction: null,
 
 	warn: function () {
-		if (!_Predicate.mute && console && console.warn) {
+		if (!_Predicate.mute && typeof console != 'undefined' && 'warn' in console) {
 			// ['jsPredicate'].concat(arguments) === ['jsPredicate', ['arg1', 'arg2']]
 			// instead of ['jsPredicate', 'arg1', 'arg2'])
 			// Do the concat manually ...
@@ -22,19 +33,11 @@ var _Predicate = {
 
 	check: function (func, arguments) {
 		if (!func.apply(this, arguments)) {
-			var error = {
-				application: 'jsPredicate',
-				condition: func,
-				arguments: arguments,
-				func: _Predicate.currentFunction
-			};
+			var error = new PredicateError(func, arguments, _Predicate.currentFunction);
 
 			if (!_Predicate.mute && console) {
-				if (console.trace) {
-					console.trace();
-				}
 				if (console.log) {
-					console.log(error);
+					console.log('jsPredicate error', error);
 				}
 			}
 			throw error;
@@ -254,6 +257,7 @@ Predicate.extend({
 });
 
 // Export the symbol
+window.PredicateError = PredicateError;
 window.Predicate = Predicate;
 
 }());

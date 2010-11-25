@@ -22,7 +22,7 @@ Predicate.active(true);
 
 // String - Simple
 
-	var string_simple = new Predicate().pre('number')
+	var string_simple = Predicate().pre('number')
 		.action(function (a, b) {
 			return a * b;
 		});
@@ -38,7 +38,7 @@ Predicate.active(true);
 
 	Predicate.extend('>1', function (x) { return x > 1; });
 
-	var string_multiple = new Predicate().pre('number >1')
+	var string_multiple = Predicate().pre('number >1')
 		.action(function (a, b) {
 			return a * b;
 		});
@@ -51,7 +51,7 @@ Predicate.active(true);
 
 // Function - 1 argument
 
-	var func_one = new Predicate().pre(function (x) { return x > 1; })
+	var func_one = Predicate().pre(function (x) { return x > 1; })
 		.action(function (a, b) {
 			return a * b;
 		});
@@ -64,7 +64,7 @@ Predicate.active(true);
 
 // Function - 2+ arguments
 
-	var func_more = new Predicate().pre(function (a, b, c) { return a + b + c === 0; })
+	var func_more = Predicate().pre(function (a, b, c) { return a + b + c === 0; })
 		.action(function (a, b, c) {
 			return a * b * c;
 		});
@@ -77,7 +77,7 @@ Predicate.active(true);
 // Function - 0 arguments
 
 	var global = false;
-	var func_zero = new Predicate().pre(function () { return global; })
+	var func_zero = Predicate().pre(function () { return global; })
 		.action(function (a, b, c) {
 			return a * b * c;
 		});
@@ -91,7 +91,7 @@ Predicate.active(true);
 
 // Array
 
-	var array = new Predicate().pre([function (x) { return x > 1; }, 'boolean'])
+	var array = Predicate().pre([function (x) { return x > 1; }, 'boolean'])
 		.action(function (num, inverse) {
 			if (inverse) { return num * num; }
 			return num + num;
@@ -107,22 +107,22 @@ Predicate.active(true);
 // Extend
 
 	Predicate.extend('false', function () { return false; });
-	var extend_simple = new Predicate().pre('false').action(function (x) { return 10; });
+	var extend_simple = Predicate().pre('false').action(function (x) { return 10; });
 	assert(false, function () { extend_simple(10); });
 
 	Predicate.extend('false', function () { return true; });
-	var extend_override = new Predicate().pre('false').action(function (x) { return 10; });
+	var extend_override = Predicate().pre('false').action(function (x) { return 10; });
 	assert(true, function () { extend_override(10); });
 
 	Predicate.extend({'false': function () { return true; }, 'true': function () { return true; }});
-	var extend_multiple = new Predicate().pre('true', 'false').action(function (x) { return 10; });
+	var extend_multiple = Predicate().pre('true', 'false').action(function (x) { return 10; });
 	assert(true, function () { extend_multiple(10); });
 
 
 // Multiple
 
 	Predicate.active(true);
-	var multiple = new Predicate().pre('number', [null, function (x) { return x != 0; }]).post('number')
+	var multiple = Predicate().pre('number', [null, function (x) { return x != 0; }]).post('number')
 		.action(function (a, b) {
 			return a / b;
 		});
