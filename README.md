@@ -1,7 +1,20 @@
 [jsPredicate](http://blog.vjeux.com/) - Design by Contract - Pre and Post conditions
 ================================
 
-// String - Simple
+jsPredicate is a utility library to let you add pre and post conditions to your functions.
+
+== Introduction
+Instead of writing your usual functions like this
+	var my_function = function (a, b) {
+	  // ...
+	}
+With a small typing overhead you will be able to add pre and post conditions:
+	var my_function = Predicate().pre( ... ).post( ... )
+		.action(function(a, b) {
+			// ...
+		});
+
+== String - Simple
 
 	var string_simple = Predicate().pre('number')
 		.action(function (a, b) {
