@@ -14,7 +14,10 @@ With a small typing overhead you will be able to add pre and post conditions:
 			// ...
 		});
 
-== String - Simple
+The pre and post functions are designed to accept many different types of parameter. This lets you write small and readable code.
+
+### String - Simple
+Usually you will use common conditions such as checking if the argument is a number. You can write the name of the function to use.
 
 	var string_simple = Predicate().pre('number')
 		.action(function (a, b) {
@@ -27,8 +30,17 @@ With a small typing overhead you will be able to add pre and post conditions:
 	assert(false, function () { string_simple(-1, []); });
 	assert(false, function () { string_simple.call(window, -1, []); });
 
+* boolean
+* number
+* positive: >= 0
+* negative: <= 0
+* spositive: > 0
+* snegative: < 0
+* integer: number but not 
+* notnull: != 0
 
-// String - Multiple Conditions
+
+### String - Multiple Conditions
 
 	Predicate.extend('>1', function (x) { return x > 1; });
 
@@ -43,7 +55,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 	assert(true, function () { string_multiple(2, 10); });
 
 
-// Function - 1 argument
+### Function - 1 argument
 
 	var func_one = Predicate().pre(function (x) { return x > 1; })
 		.action(function (a, b) {
@@ -56,7 +68,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 	assert(true, function () { func_one(5, 15); });
 
 
-// Function - 2+ arguments
+### Function - 2+ arguments
 
 	var func_more = Predicate().pre(function (a, b, c) { return a + b + c === 0; })
 		.action(function (a, b, c) {
@@ -68,7 +80,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 	assert(false, function () { func_more(2); });
 
 
-// Function - 0 arguments
+### Function - 0 arguments
 
 	var global = false;
 	var func_zero = Predicate().pre(function () { return global; })
@@ -83,7 +95,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 	global = true;
 	assert(global, function () { func_zero(10); });
 
-// Array
+### Array
 
 	var array = Predicate().pre([function (x) { return x > 1; }, 'boolean'])
 		.action(function (num, inverse) {
@@ -98,7 +110,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 	assert(false, function () { array(0); });
 
 
-// Extend
+### Extend
 
 	Predicate.extend('false', function () { return false; });
 	var extend_simple = Predicate().pre('false').action(function (x) { return 10; });
@@ -113,7 +125,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 	assert(true, function () { extend_multiple(10); });
 
 
-// Multiple
+### Multiple
 
 	Predicate.active(true);
 	var multiple = Predicate().pre('number', [null, function (x) { return x != 0; }]).post('number')
