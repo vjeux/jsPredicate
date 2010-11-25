@@ -3,8 +3,7 @@
 
 jsPredicate is a utility library to let you add pre and post conditions to your functions.
 
-== Introduction
-Instead of writing your usual functions like this
+Instead of writing your usual functions like this:
 	var my_function = function (a, b) {
 	  // ...
 	}
@@ -17,7 +16,7 @@ With a small typing overhead you will be able to add pre and post conditions:
 The pre and post functions are designed to accept many different types of parameter. This lets you write small and readable code.
 
 ### String - Simple
-Usually you will use common conditions such as checking if the argument is a number. You can write the name of the function to use.
+Usually you will use common conditions such as checking if the arguments are numbers. You can write the name of the function to use.
 
 	var string_simple = Predicate().pre('number')
 		.action(function (a, b) {
@@ -30,6 +29,7 @@ Usually you will use common conditions such as checking if the argument is a num
 	assert(false, function () { string_simple(-1, []); });
 	assert(false, function () { string_simple.call(window, -1, []); });
 
+By default several functions are defined:
 * boolean
 * number
 * positive: >= 0
@@ -41,9 +41,10 @@ Usually you will use common conditions such as checking if the argument is a num
 
 
 ### String - Multiple Conditions
-
+If you are not pleased with the few predefined functions you can define your own using the extend function
 	Predicate.extend('>1', function (x) { return x > 1; });
 
+You can use a string with multiple function names separated by spaces to require all the functions to be matched
 	var string_multiple = Predicate().pre('number >1')
 		.action(function (a, b) {
 			return a * b;
@@ -56,6 +57,7 @@ Usually you will use common conditions such as checking if the argument is a num
 
 
 ### Function - 1 argument
+If you want a special condition you can pass directly a function that takes one parameter.
 
 	var func_one = Predicate().pre(function (x) { return x > 1; })
 		.action(function (a, b) {
@@ -69,7 +71,7 @@ Usually you will use common conditions such as checking if the argument is a num
 
 
 ### Function - 2+ arguments
-
+If there is more than one argument, the function will be called with all the arguments.
 	var func_more = Predicate().pre(function (a, b, c) { return a + b + c === 0; })
 		.action(function (a, b, c) {
 			return a * b * c;
@@ -81,7 +83,7 @@ Usually you will use common conditions such as checking if the argument is a num
 
 
 ### Function - 0 arguments
-
+If there's a function without any argument, it will always be called no matter what.
 	var global = false;
 	var func_zero = Predicate().pre(function () { return global; })
 		.action(function (a, b, c) {
@@ -96,6 +98,7 @@ Usually you will use common conditions such as checking if the argument is a num
 	assert(global, function () { func_zero(10); });
 
 ### Array
+In the previous examples, all the parameters were treated with the same condition. Passing an array will let you set specific conditions for arguments. The first array element will be applied on the first argument. Use null as a 'do nothing' parameter
 
 	var array = Predicate().pre([function (x) { return x > 1; }, 'boolean'])
 		.action(function (num, inverse) {
@@ -110,23 +113,8 @@ Usually you will use common conditions such as checking if the argument is a num
 	assert(false, function () { array(0); });
 
 
-### Extend
-
-	Predicate.extend('false', function () { return false; });
-	var extend_simple = Predicate().pre('false').action(function (x) { return 10; });
-	assert(false, function () { extend_simple(10); });
-
-	Predicate.extend('false', function () { return true; });
-	var extend_override = Predicate().pre('false').action(function (x) { return 10; });
-	assert(true, function () { extend_override(10); });
-
-	Predicate.extend({'false': function () { return true; }, 'true': function () { return true; }});
-	var extend_multiple = Predicate().pre('true', 'false').action(function (x) { return 10; });
-	assert(true, function () { extend_multiple(10); });
-
-
 ### Multiple
-
+If you use multiple parameters, they will all be used combined with a logical AND.
 	Predicate.active(true);
 	var multiple = Predicate().pre('number', [null, function (x) { return x != 0; }]).post('number')
 		.action(function (a, b) {
